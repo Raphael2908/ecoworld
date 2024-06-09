@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, SafeAreaView, Text, View } from "react-native";
-import { EcoWorldButton, Dice, QrCodeButton } from "../assets/svgs/svgComponents"
+import { EcoWorldButton, Dice, QrCodeButton } from "@/assets/svgs/svgComponents"
 import { Link } from 'expo-router';
 
 
