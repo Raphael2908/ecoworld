@@ -4,8 +4,6 @@ import Svg, { Path, Circle, Mask } from "react-native-svg"
 function CaptainJef() {
   return (
     <Svg
-      width={99}
-      height={84}
       viewBox="0 0 99 84"
       fill="none"
     >

@@ -43,10 +43,6 @@ function useReward(initialTaps = 0) {
 
     // Send request to server to store gacha (omitted here for brevity)
 
-    console.log(reward);
-    console.log(taps);
-    console.log(rollsStatus);
-
     return { increment, reward, rollsStatus, rolls };
 }
 
