@@ -11,8 +11,6 @@ import Svg, {
 function Wayne() {
   return (
     <Svg
-      width={93}
-      height={99}
       viewBox="0 0 93 99"
       fill="none"
     >

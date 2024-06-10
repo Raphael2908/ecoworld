@@ -9,7 +9,7 @@ function useReward(initialTaps = 0) {
     const [taps, setTaps] = useState(initialTaps);
     const [rolls, setRolls] = useState(0);
     const [reward, setReward] = useState<string | null>(null);
-    const [rollsStatus, setRollsStatus] = useState<string>("");
+    
 
     useEffect(() => {
         // Get amount of rolls from server
@@ -23,7 +23,7 @@ function useReward(initialTaps = 0) {
 
     useEffect(() => {
         if (rolls === 0) {
-            setRollsStatus("Not enough rolls");
+
             return;
         }
 
@@ -43,7 +43,7 @@ function useReward(initialTaps = 0) {
 
     // Send request to server to store gacha (omitted here for brevity)
 
-    return { increment, reward, rollsStatus, rolls };
+    return { increment, reward, rolls };
 }
 
 export default useReward;
