@@ -5,6 +5,7 @@ import { Link } from 'expo-router';
 import Auth from "@/components/auth";
 import { supabase } from '@/components/auth'
 import { Session } from '@supabase/supabase-js'
+import uploadImage from "@/hooks/useUpload";
 
 
 const App = () => {
@@ -19,7 +20,7 @@ const App = () => {
       setSession(session)
     })
   }, [])
-  console.log(session)
+  console.log(session?.user.id)
   if(!session){
     return (
       <Auth/>
@@ -50,6 +51,10 @@ const App = () => {
             <QrCodeButton/>
           </Pressable>
         </View>
+
+        <Pressable onPress={uploadImage}>
+          <Text>Test Upload</Text>
+        </Pressable>
     </SafeAreaView>
   );
 };

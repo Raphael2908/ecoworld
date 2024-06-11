@@ -20,7 +20,11 @@ export default function Auth() {
     const [modalVisible, setModalVisible] = useState(true);
     async function anonSignIn (){
         const { data, error } = await supabase.auth.signInAnonymously()
-        console.log(data, error)
+        const { error: insertError } = await supabase.from('rolls').insert({
+            user_id: data.user?.id,
+            rolls: 0
+        })
+        console.log(data, error, insertError)
     }
 
     return (
