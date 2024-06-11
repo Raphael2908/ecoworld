@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, Text, View } from "react-native";
 import { EcoWorldButton, Dice, QrCodeButton } from "@/assets/svgs/svgComponents"
 import { Link } from 'expo-router';
+import Auth from "@/components/auth";
+import { supabase } from '@/components/auth'
+import { Session } from '@supabase/supabase-js'
 
 
 const App = () => {
+  const [session, setSession] = useState<Session | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+  }, [])
+  console.log(session)
+  if(!session){
+    return (
+      <Auth/>
+    )
+  }
+  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F7F2EE' }}>
