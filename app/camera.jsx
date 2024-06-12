@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Pressable, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Constants from 'expo-constants';
+import { Link, Redirect } from 'expo-router';
 import { Camera, CameraType } from 'expo-camera/legacy';
 import * as MediaLibrary from 'expo-media-library';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -39,8 +40,8 @@ export default function camera() {
       try {
         //const asset = await MediaLibrary.createAssetAsync(image);
         alert('Picture Uploaded! 🎉');
-        //setImage(null);
         uploadImage();
+        setImage(null);
         console.log('Uploaded successfully');
       } catch (error) {
         console.log(error);
@@ -111,7 +112,22 @@ export default function camera() {
             <Button title="Save & Upload" onPress={savePicture} icon="check" />
           </View>
         ) : (
+          <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 50,
+          }}
+          >
+            <Link href="/susBall" asChild>
+            <Pressable>
+              <View style={styles.Box}>
+                <Text style={styles.text}>Roll for Rewards!</Text>
+              </View>
+            </Pressable>
+          </Link>
           <Button title="Take a picture" onPress={takePicture} icon="camera" />
+        </View>
         )}
       </View>
     </View>
@@ -124,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#000',
-    padding: 8,
+    padding: 0,
   },
   controls: {
     flex: 0.5,
@@ -139,8 +155,12 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#E9730F',
-    marginLeft: 10,
+    color: '#FFFFFF',
+    marginLeft: 0,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   camera: {
     flex: 5,
@@ -148,5 +168,17 @@ const styles = StyleSheet.create({
   },
   topControls: {
     flex: 1,
+  },
+  Box: {
+    height: 40,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -30,
+    marginRight: 30,
+    fontSize: 16,
+    color: '#FF0000',
+    fontWeight: 'bold',
   },
 });
