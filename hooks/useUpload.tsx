@@ -35,7 +35,6 @@ export default async function uploadImage() {
         user_id: session.user.id,
         rolls: newRolls, 
     };
-    console.log("uploading "+  session.user.id)
     
     // Perform the insert operation
     const { error: upsertError } = await supabase.from('rolls')

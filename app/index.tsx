@@ -7,7 +7,6 @@ import { supabase } from '@/components/auth'
 import { Session } from '@supabase/supabase-js'
 import uploadImage from "@/hooks/useUpload";
 
-
 const App = () => {
   const [session, setSession] = useState<Session | null>(null)
 
@@ -20,13 +19,12 @@ const App = () => {
       setSession(session)
     })
   }, [])
-  console.log(session?.user.id)
+
   if(!session){
     return (
       <Auth/>
     )
   }
-  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F7F2EE' }}>
@@ -54,9 +52,6 @@ const App = () => {
           </Link>
         </View>
 
-        <Pressable onPress={uploadImage}>
-          <Text>Test Upload</Text>
-        </Pressable>
     </SafeAreaView>
   );
 };

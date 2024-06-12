@@ -14,7 +14,6 @@ function useReward(initialTaps = 0) {
         let { data: { session } } = await supabase.auth.getSession()
         const test = await supabase.from('rolls').select('*').eq('user_id', session?.user.id);
         if (test.data?.length) {
-            console.log(test.data[0].rolls, "test")
             setRolls(test.data[0].rolls)
         }
         else return 0

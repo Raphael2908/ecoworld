@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View, Text, Pressable } from "react-native";
 import useLoadAnimals from "@/hooks/useLoadAnimals";
 import EcoWorld from "@/assets/svgs/ecoworld";
 import { Wayne } from "@/assets/svgs/wayne";
 import { CaptainJef } from "@/assets/svgs/captainJef";
+import BottomSheet from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import getAnimalSpeech from "@/helpers/getAnimalSpeech";
 
 interface Animal {
   name: string,
@@ -17,6 +20,20 @@ function randomIntFromInterval(min: number, max: number) { // min and max includ
 const World = () => {
   const [animals, setAnimals] = useState<Array<Animal> | []>([]);
   const [animalRender, setAnimalRender] = useState<Array<JSX.Element>>([]);
+  const [currentTalkingAnimal, setCurrentTalkingAnimal] = useState<string>()
+  const [response , setResponse] = useState<string>('')
+  const convoBottomSheetRef = useRef<BottomSheet>(null)
+  
+  // Bottom Sheet management
+  const handleSheetOpen = () => convoBottomSheetRef.current?.expand()
+
+  // when user taps animal
+  const handleTalkingAnimal = async (animal: string) => {
+    setCurrentTalkingAnimal(animal)
+    handleSheetOpen()
+    let result: string = await getAnimalSpeech(animal)
+    setResponse(result)
+} 
 
   useEffect(() => {
     async function fetchAnimals() {
@@ -33,18 +50,22 @@ const World = () => {
             let wayneX = randomIntFromInterval(100, 300)
             let wayneY = randomIntFromInterval(150, 250)
             newAnimalRender.push(
-              <View key={animal.id} style={{ height: 70, width: 70, position: 'absolute', zIndex: 3, top: wayneY, right: wayneX }}>
-                <Wayne />
-              </View>
+              <Pressable key={animal.id} onPress={() => handleTalkingAnimal(animal.name)} style={{ height: 70, width: 70, position: 'absolute', zIndex: 3, top: wayneY, right: wayneX }}>
+                <View>
+                  <Wayne />
+                </View>
+              </Pressable>
             );
           }
           if (animal.name === "captain jef") {
             let captainJefX = randomIntFromInterval(100, 300)
             let captainJefY = randomIntFromInterval(150, 250)
             newAnimalRender.push(
-              <View key={animal.id} style={{ height: 70, width: 70, position: 'absolute', zIndex: 3, top: captainJefY, right: captainJefX }}>
-              <CaptainJef />
-            </View>
+              <Pressable key={animal.id} onPress={() => handleTalkingAnimal(animal.name)} style={{ height: 70, width: 70, position: 'absolute', zIndex: 3, top: captainJefY, right: captainJefX }}>
+                <View>
+                  <CaptainJef />
+                </View>
+              </Pressable>
             );
           }
         });
@@ -55,13 +76,26 @@ const World = () => {
     fetchAnimals();
   }, []);
 
+
   return (
-    <View style={{ padding: 10 , height: "100%", position: 'relative' }}>
+    <GestureHandlerRootView style={{ padding: 10 , height: "100%", position: 'relative' }}>
       {animalRender}
       <View style={{ height: 400, width: "100%", position: 'absolute', left: 10, top: 100}}>
         <EcoWorld />
       </View>
-    </View>
+
+      <BottomSheet ref={convoBottomSheetRef} enablePanDownToClose={true} index={-1} snapPoints={["40%"]}>
+          <View style={{flex: 1, flexDirection: 'row', padding: 10}}>
+            <View style={{height:50, flex: 1}}>
+              {currentTalkingAnimal == 'wayne' ? <Wayne/> : null}
+              {currentTalkingAnimal == 'captain jef' ? <CaptainJef/> : null}
+            </View>
+            <Text style={{flex: 4}}>
+              {response}
+            </Text>
+          </View>
+      </BottomSheet>
+    </GestureHandlerRootView>
   );
 }
 
