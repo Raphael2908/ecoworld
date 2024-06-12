@@ -39,7 +39,7 @@ export default function camera() {
       try {
         //const asset = await MediaLibrary.createAssetAsync(image);
         alert('Picture Uploaded! 🎉');
-        setImage(null);
+        //setImage(null);
         uploadImage();
         console.log('Uploaded successfully');
       } catch (error) {
