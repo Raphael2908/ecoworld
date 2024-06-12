@@ -18,13 +18,15 @@ AppState.addEventListener('change', (state) => {
 export { supabase }
 export default function Auth() {
     const [modalVisible, setModalVisible] = useState(true);
+    const [name, setName] = useState<string>()
     async function anonSignIn (){
         const { data, error } = await supabase.auth.signInAnonymously()
         const { error: insertError } = await supabase.from('rolls').insert({
             user_id: data.user?.id,
             rolls: 0
         })
-        console.log(data, error, insertError)
+        const { error: insertNameError } = await supabase.from('profiles').insert({user_id: data.user?.id, name: name})
+      console.log(data, error, insertError, insertNameError )
     }
 
     return (
@@ -41,7 +43,7 @@ export default function Auth() {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Please tell us your name!</Text>
             <View style={{width:"100%", gap:10}}>
-                <TextInput style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black"}} placeholderTextColor={"white"} placeholder='Name'/>
+                <TextInput onChangeText={setName} style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black"}} placeholderTextColor={"white"} placeholder='Name'/>
             </View>
             <Pressable style={{ 
             height: 54,
