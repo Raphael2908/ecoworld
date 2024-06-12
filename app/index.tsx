@@ -46,10 +46,12 @@ const App = () => {
             </View>
           </Link>
 
-          <Pressable style={{flex: 1, alignItems: 'center', gap: 10}}>
-            <Text>Tap to scan!</Text>
-            <QrCodeButton/>
-          </Pressable>
+          <Link href="/camera">
+            <View style={{flex: 1, alignItems: 'center', gap: 10}}>
+              <Text>Tap to scan!</Text>
+              <QrCodeButton/>
+            </View>
+          </Link>
         </View>
 
         <Pressable onPress={uploadImage}>
