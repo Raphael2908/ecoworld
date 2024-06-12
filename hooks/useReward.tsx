@@ -25,6 +25,11 @@ function useReward(initialTaps = 0) {
         const { error: updateError } = await supabase.from('rolls').update({ 'rolls': rolls - 1 }).eq('user_id', session?.user.id)
     }
 
+    async function updateAnimals(name: string) {
+        let { data: { session } } = await supabase.auth.getSession()
+        const { error: updateError } = await supabase.from('animals').insert([{ user_id: session?.user.id, name: name }]).eq('user_id', session?.user.id)
+    }
+
     useEffect(() => {
         getRolls()
     }, []);
@@ -43,11 +48,11 @@ function useReward(initialTaps = 0) {
             const randNum = getRandomInt(10);
             if (randNum <= 3) {
                 setReward('wayne');
+                updateAnimals('wayne')
             } else {
                 setReward('captain jef');
+                updateAnimals('captain jef')
             }
-
-            // Reset count
             setTaps(0);
             setRolls(rolls - 1);
             updateAsync()
