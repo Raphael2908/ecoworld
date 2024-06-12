@@ -7,22 +7,22 @@ function getRandomInt(max: number) {
 // Custom hook to manage reward / gacha logic
 function useReward(initialTaps = 0) {
     const [taps, setTaps] = useState(initialTaps);
-    const [rolls, setRolls] = useState(0);
+    const [rolls, setRolls] = useState(Number || undefined);
     const [reward, setReward] = useState<string | null>(null);
-
+    const [isLoading, setIsLoading] = useState(true)
     async function getRolls() {
         let { data: { session } } = await supabase.auth.getSession()
         const test = await supabase.from('rolls').select('*').eq('user_id', session?.user.id);
         if (test.data?.length) {
-            console.log(test.data[0].rolls, "test")
             setRolls(test.data[0].rolls)
+            setIsLoading(false)
         }
         else return 0
     }
 
     async function updateAsync() {
         let { data: { session } } = await supabase.auth.getSession()
-        const { error: updateError } = await supabase.from('rolls').update({ 'rolls': rolls - 1 }).eq('user_id', session?.user.id)
+        const { error: updateError } = await supabase.from('rolls').update({ 'rolls': rolls ? rolls - 1 : null }).eq('user_id', session?.user.id)
     }
 
     async function updateAnimals(name: string) {
@@ -54,14 +54,15 @@ function useReward(initialTaps = 0) {
                 updateAnimals('captain jef')
             }
             setTaps(0);
-            setRolls(rolls - 1);
+            setRolls(rolls ? rolls - 1 : 0);
             updateAsync()
+            
         }
     }, [taps, rolls]);
 
     // Send request to server to store gacha (omitted here for brevity)
 
-    return { increment, reward, rolls };
+    return { increment, reward, rolls, isLoading };
 }
 
 export default useReward;
