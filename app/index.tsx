@@ -19,7 +19,7 @@ const App = () => {
       setSession(session)
     })
   }, [])
-
+  
   if(!session){
     return (
       <Auth/>
