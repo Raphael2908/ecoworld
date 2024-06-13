@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TextInput } from "react-native";
 import useLoadAnimals from "@/hooks/useLoadAnimals";
 import EcoWorld from "@/assets/svgs/ecoworld";
 import { Wayne } from "@/assets/svgs/wayne";
@@ -7,6 +7,7 @@ import { CaptainJef } from "@/assets/svgs/captainJef";
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import getAnimalSpeech from "@/helpers/getAnimalSpeech";
+import talkToAnimal from "@/helpers/talkToAnimal";
 
 interface Animal {
   name: string,
@@ -23,17 +24,24 @@ const World = () => {
   const [currentTalkingAnimal, setCurrentTalkingAnimal] = useState<string>()
   const [response , setResponse] = useState<string>('')
   const convoBottomSheetRef = useRef<BottomSheet>(null)
-  
+  const [message, setMessage] = useState<string>()
+  const [isLoadingAIText, setIsLoadingAIText] = useState<Boolean>()
   // Bottom Sheet management
   const handleSheetOpen = () => convoBottomSheetRef.current?.expand()
-
+  const handleTextActive = () => convoBottomSheetRef.current?.snapToPosition("80%") 
   // when user taps animal
   const handleTalkingAnimal = async (animal: string) => {
     setCurrentTalkingAnimal(animal)
     handleSheetOpen()
     let result: string = await getAnimalSpeech(animal)
     setResponse(result)
-} 
+  } 
+  const handleSendMessage = async(animal: string, message: string) => {
+    setIsLoadingAIText(true)
+    let result: string = await talkToAnimal(animal, message)
+    setResponse(result)
+    setIsLoadingAIText(false)
+  }
 
   useEffect(() => {
     async function fetchAnimals() {
@@ -85,14 +93,29 @@ const World = () => {
       </View>
 
       <BottomSheet ref={convoBottomSheetRef} enablePanDownToClose={true} index={-1} snapPoints={["40%"]}>
-          <View style={{flex: 1, flexDirection: 'row', padding: 10}}>
-            <View style={{height:50, flex: 1}}>
-              {currentTalkingAnimal == 'wayne' ? <Wayne/> : null}
-              {currentTalkingAnimal == 'captain jef' ? <CaptainJef/> : null}
+          <View style={{flex:1, padding: 10 }}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{height:50, flex: 1}}>
+                {currentTalkingAnimal == 'wayne' ? <Wayne/> : null}
+                {currentTalkingAnimal == 'captain jef' ? <CaptainJef/> : null}
+              </View>
+              <Text style={{flex: 4}}>
+                {isLoadingAIText == true ? "Loading..." : response  }
+              </Text>
             </View>
-            <Text style={{flex: 4}}>
-              {response}
-            </Text>
+
+          <TextInput onChangeText={setMessage} onFocus={() => handleTextActive } style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black"}} />
+          <Pressable style={{ 
+            height: 54,
+            marginTop: 10,
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center", 
+            backgroundColor: "#272727",
+            borderRadius: 10}} onPress={() => handleSendMessage(currentTalkingAnimal!, message!)}>
+                <Text style ={{color:'white'}}>Send</Text>
+            </Pressable>
+
           </View>
       </BottomSheet>
     </GestureHandlerRootView>
