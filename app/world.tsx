@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
+import { View, Text, Pressable, TextInput, ScrollView, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import useLoadAnimals from "@/hooks/useLoadAnimals";
 import EcoWorld from "@/assets/svgs/ecoworld";
 import { Wayne } from "@/assets/svgs/wayne";
@@ -26,8 +26,13 @@ const World = () => {
   const convoBottomSheetRef = useRef<BottomSheet>(null)
   const [message, setMessage] = useState<string>()
   const [isLoadingAIText, setIsLoadingAIText] = useState<Boolean>()
+  const [isSheetOpen, setIsSheetOpen] = useState<Boolean>(false)
+  
   // Bottom Sheet management
-  const handleSheetOpen = () => convoBottomSheetRef.current?.expand()
+  const handleSheetOpen = () => {
+    convoBottomSheetRef.current?.expand()
+    setIsSheetOpen(true)
+  }
   const handleTextActive = () => convoBottomSheetRef.current?.snapToPosition("80%") 
   // when user taps animal
   const handleTalkingAnimal = async (animal: string) => {
@@ -69,7 +74,7 @@ const World = () => {
             let captainJefX = randomIntFromInterval(100, 300)
             let captainJefY = randomIntFromInterval(150, 250)
             newAnimalRender.push(
-              <Pressable key={animal.id} onPress={() => handleTalkingAnimal(animal.name)} style={{ height: 70, width: 70, position: 'absolute', zIndex: 3, top: captainJefY, right: captainJefX }}>
+              <Pressable key={animal.id} onPress={() => handleTalkingAnimal(animal.name)} style={{ height: 70, width: 70, position: 'absolute', zIndex: 1, top: captainJefY, right: captainJefX }}>
                 <View>
                   <CaptainJef />
                 </View>
@@ -87,13 +92,16 @@ const World = () => {
 
   return (
     <GestureHandlerRootView style={{ padding: 10 , height: "100%", position: 'relative' }}>
-      {animalRender}
+      {isSheetOpen == true ? null : animalRender}
       <View style={{ height: 400, width: "100%", position: 'absolute', left: 10, top: 100}}>
         <EcoWorld />
       </View>
 
-      <BottomSheet ref={convoBottomSheetRef} enablePanDownToClose={true} index={-1} snapPoints={["40%"]}>
-          <View style={{flex:1, padding: 10 }}>
+      <BottomSheet ref={convoBottomSheetRef} enablePanDownToClose={true} index={-1} snapPoints={["100%"]} onClose={()=> {
+        setIsSheetOpen(false)
+        Keyboard.dismiss()
+      }}>
+          <View style={{flex:1, padding: 10,}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <View style={{height:50, flex: 1}}>
                 {currentTalkingAnimal == 'wayne' ? <Wayne/> : null}
@@ -104,17 +112,19 @@ const World = () => {
               </Text>
             </View>
 
-          <TextInput onChangeText={setMessage} onFocus={() => handleTextActive } style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black"}} />
-          <Pressable style={{ 
-            height: 54,
-            marginTop: 10,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center", 
-            backgroundColor: "#272727",
-            borderRadius: 10}} onPress={() => handleSendMessage(currentTalkingAnimal!, message!)}>
-                <Text style ={{color:'white'}}>Send</Text>
-            </Pressable>
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{flex: 1}}>
+            <TextInput onChangeText={setMessage} onFocus={() => handleTextActive } style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black", paddingLeft: 8}} />
+            <Pressable style={{
+              height: 54,
+              marginTop: 10,
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#272727",
+              borderRadius: 10}} onPress={() => handleSendMessage(currentTalkingAnimal!, message!)}>
+                  <Text style ={{color:'white'}}>Send</Text>
+              </Pressable>
+          </KeyboardAvoidingView>
 
           </View>
       </BottomSheet>

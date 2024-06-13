@@ -43,7 +43,7 @@ export default function Auth() {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Please tell us your name!</Text>
             <View style={{width:"100%", gap:10}}>
-                <TextInput onChangeText={setName} style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black"}} placeholderTextColor={"white"} placeholder='Name'/>
+                <TextInput onChangeText={setName} style={{width:"100%", height: 43, borderWidth: 1, borderStyle:"solid", borderRadius: 5, borderColor: "black", color: "black", paddingLeft: 8}} placeholderTextColor={"white"} placeholder='Name'/>
             </View>
             <Pressable style={{ 
             height: 54,

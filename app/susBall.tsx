@@ -19,13 +19,19 @@ const SusBall = () => {
                         </View>
                     }
                     { reward == 'wayne' &&
-                        <View style={{height: 200}}>
-                            <Wayne/>
+                        <View>
+                            <Text style={{ flexShrink: 1, fontSize: 32, color: "black", alignSelf: 'center' }}>You found Wayne!</Text>
+                            <View style={{height: 200}}>
+                                <Wayne/>
+                            </View>
                         </View>
                     }
                     { reward == 'captain jef' &&
-                        <View style={{height: 200}}>
-                            <CaptainJef/>
+                        <View>
+                            <Text style={{ flexShrink: 1, fontSize: 32, color: "black", alignSelf: 'center' }}>You found Captain Jef</Text>
+                            <View style={{height: 200}}>
+                                <CaptainJef/>
+                            </View>
                         </View>
                     }
             </View>
